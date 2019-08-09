@@ -11,27 +11,28 @@ class Lexer
     assignment: ['=', '+=', '-=', '*=', '/=', '%='],
     operator: [ '++', '--', '+', '-', '*', '/', '%', '&&', '||', '!'], 
     literal: ['true', 'false', /\"(\\\"|[^\"])*\"/, /\d+(\.\d+)?/],
-    identifier: [/[A-Za-z_]\w*/]
+    identifier: [/[A-Za-z_]\w*/],
+    comment: ['/*', '*/', '//']
   }
 
   def self.tokenize (str)
-    # remove all comments. needs work.
-    str = str.gsub(/\\\\[^\n]*/, "").gsub(/(\\\*([^*]|\*(?!\\))*\*\\)/, "")
-
     tokens = []
-    str.gsub(/\S+/).each do |word|
-      KEWORDS.each do |name, array|
-        array.each do |rule|
-          if rule == word
-            tokens += [Token.new(name, word)]
-            word = ""
+    str.gsub(/[^\n]+/).each do |line|
+      line.gsub(/\S+/).each do |word|
+        KEWORDS.each do |name, array|
+          array.each do |rule|
+            if rule == word
+              tokens += [Token.new(name, word)]
+              word = ""
+            end
           end
         end
+        if word != ""
+          tokens += scan_word(word)
+        end
+        tokens += [Token.new(:seperator, " ")]
       end
-      if word != ""
-        tokens += scan_word(word)
-      end
-      tokens += [Token.new(:seperator, ' ')]
+      tokens += [Token.new(:seperator, "\\n")]
     end
 
     return tokens[0..-2]
