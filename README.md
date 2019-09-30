@@ -19,4 +19,4 @@ No functioning compiler is currenty avalible.
 
 ## Contributing
 
-Please read CONTRIBUTING.md
+Please read [CONTRIBUTING.md](CONTRIBUTING.md)
