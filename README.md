@@ -16,3 +16,7 @@ and uses simular formating to minecraft commands for implementing thier uniqe fu
 Early development is currintly ongoing.
 
 No functioning compiler is currenty avalible.
+
+## Contributing
+
+Please read CONTRIBUTING.md
