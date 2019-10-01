@@ -26,4 +26,4 @@ If applicable, add screenshots to help explain your problem.
 **Build details (please complete the following information):**
  - OS: [e.g. Win 10]
  - Ruby version [e.g. ruby 2.6.4]
- - BOWL commit [e.g. 46fe8e7]
+ - BOWL commit [e.g. 46fe8e76814498da0444dbb2fda4019a6603ee34]
