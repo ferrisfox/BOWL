@@ -1,72 +1,97 @@
 class Lexer
-  KEWORDS = {
-    flow: ['if','elif','else','while','for','do','return'],
-    type: ['bool','int','void'],
-    other: ['class', 'new','private','protected','public','static','super','this']
-  }
-  
   TOKENS = {
-    seperator: ['(', ')', '[', ']', '{', '}', ';', ',', '.', '`'],
-    comparason: ['==', '>=', '<=', '!=', '>', '<'],
-    assignment: ['=', '+=', '-=', '*=', '/=', '%='],
-    operator: [ '++', '--', '+', '-', '*', '/', '%', '&&', '||', '!'], 
-    literal: ['true', 'false', /\"(\\\"|[^\"])*\"/, /\d+(\.\d+)?/],
-    identifier: [/[A-Za-z_]\w*/],
-    comment: ['/*', '*/', '//']
+    # keywords, current list was taken from java 
+    # and does not match the final keyword list 
+    if: 'if', elif: 'elif', else: 'else', while: 'while', for: 'for', do: 'do',
+    return: 'return', boolean: 'bool', int: 'int', void: 'void', class: 'class',
+    new: 'new', private: 'private', protected: 'protected', public: 'public',
+    static: 'static', super: 'super', this: 'this',
+
+    
+    # punctuation. i.e. symbols that seperate stuff
+    instruction_seperator: ';',
+    list_seperator: ',',
+    identifier_seperator: '.',
+
+    # brackets. i.e. symbols that group stuff together
+    open_paren: '(', close_paren: ')',
+    open_bracket: '[', close_bracket: ']',
+    open_brace: '{', close_brace: '}',
+    
+
+    # comparison operators
+    eqeq: '==', gteq: '>=', lteq: '<=', nteq: '!=', gt: '>', lt: '<',
+
+    # assignment operators
+    eq: '=', plus_eq: '+=', minus_eq: '-=',
+    mult_eq: '*=', div_eq: '/=', mod_eq: '%=',
+
+
+    # mathamatical operators
+    incrament: '++', decrament: '--',
+    plus: '+', minus: '-', mult: '*', div: '/', mod: '%',
+
+    # boolean operators
+    bool_and: '&&', bool_or: '||', bool_not: '!',
+
+
+    # literal statements
+    bool_true: 'true', bool_false: 'false',
+    string: /\"(\\\"|[^\"])*\"/,
+    decimal: /\d+\.\d+/,
+    interger: /\d+/,
+
+    # variables, methods, constants, classes, etc.
+    identifier: /[A-Za-z_]\w*/,
+
+    # comments
+    comment_line: /\/\/[^\n]*(?=\n)/, # "// comment here"
+    comment_block: /\/\*(\\.|[^\*]|\*(?!\/))*\*\//, # "/* comment here */"
+
+    # white space
+    white_space: /[ \t]/, new_line: '\n',
+
+    # when something breaks
+    unknown: /./
   }
 
   def self.tokenize (str)
-    tokens = []
-    str.gsub(/[^\n]+/).each do |line|
-      line.gsub(/\S+/).each do |word|
-        KEWORDS.each do |name, array|
-          array.each do |rule|
-            if rule == word
-              tokens += [Token.new(name, word)]
-              word = ""
-            end
-          end
-        end
-        if word != ""
-          tokens += scan_word(word)
-        end
-        tokens += [Token.new(:seperator, " ")]
-      end
-      tokens += [Token.new(:seperator, "\\n")]
-    end
+    matches = TOKENS.map { |symbol, pattern| 
+      match = match_regex(pattern, str);
+      match ? [symbol, match] : nil
+    }.compact.to_h
 
-    return tokens[0..-2]
-  end
+    len = matches.map { |_, str| str.length}.max
 
-  
-  def self.scan_word (word)
-    tokens = []
-    TOKENS.each do |name, array|
-      array.each do |regex|
-        match = match_regex(regex, word)
-        if match != nil
-          tokens += [Token.new(name, match)]
-          word = word[match.length..-1]
-        end
+    matches = matches.map { |symbol, match| 
+      match.length == len ? [symbol, match] : nil
+    }.compact.to_h
+
+    token = nil
+    if ( matches.length == 1 )
+      token = Token.new(matches.keys[0], matches[matches.keys[0]])
+    else
+      matches.each { |symbol, match|
+        token = Token.new(symbol, match) if TOKENS[symbol].is_a?(String)
+      }
+      if ( token == nil )
+        token = Token.new(matches.keys[0], matches[matches.keys[0]])
       end
     end
 
-    if tokens == []
-      tokens += [Token.new(:unidentified, word)]
-      word = ""
-    elsif word != ""
-      tokens += scan_word(word)
+    if ( str.length == len )
+      return token
+    else
+      return [token, tokenize(str[len..-1])].flatten
     end
-    
-    return tokens
   end
 
 
-  def self.match_regex (regex, word)
-    if regex.is_a?(String) && regex == word[0..regex.length-1]
+  def self.match_regex (regex, str)
+    if regex.is_a?(String) && regex == str[0..regex.length-1]
       return regex
-    elsif regex.is_a?(Regexp) && /^#{regex}/.match?(word)
-      return /^#{regex}/.match(word)[0]
+    elsif regex.is_a?(Regexp) && /^#{regex}/.match?(str)
+      return /^#{regex}/.match(str)[0]
     else
       return nil
     end
@@ -74,12 +99,4 @@ class Lexer
 end
 
 
-
-class Token
-  attr_reader :type, :text
-
-  def initialize(type, text)
-    @type = type
-    @text = text
-  end
-end
+Token = Struct.new(:type, :text)
