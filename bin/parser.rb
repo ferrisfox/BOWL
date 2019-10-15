@@ -1,3 +1,5 @@
+require './lib/token'
+
 class Parser
   RULES = [
     []

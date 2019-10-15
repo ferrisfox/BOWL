@@ -1,3 +1,5 @@
+require './lib/token'
+
 class Lexer
   TOKENS = {
     # keywords, current list was taken from java 
@@ -97,6 +99,3 @@ class Lexer
     end
   end
 end
-
-
-Token = Struct.new(:type, :text)
