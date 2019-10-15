@@ -39,7 +39,7 @@ class Lexer
     bool_true: 'true', bool_false: 'false',
     string: /\"(\\\"|[^\"])*\"/,
     decimal: /\d+\.\d+/,
-    interger: /\d+/,
+    integer: /\d+/,
 
     # variables, methods, constants, classes, etc.
     identifier: /[A-Za-z_]\w*/,
@@ -53,28 +53,28 @@ class Lexer
 
     # when something breaks
     unknown: /./
-  }
+    }.freeze
 
-  def self.tokenize (str)
+  def self.tokenize(str)
     matches = TOKENS.map { |symbol, pattern| 
       match = match_regex(pattern, str);
       match ? [symbol, match] : nil
     }.compact.to_h
 
-    len = matches.map { |_, str| str.length}.max
+    len = matches.values.map(&:length).max
 
     matches = matches.map { |symbol, match| 
       match.length == len ? [symbol, match] : nil
     }.compact.to_h
 
     token = nil
-    if ( matches.length == 1 )
+    if matches.length == 1
       token = Token.new(matches.keys[0], matches[matches.keys[0]])
     else
-      matches.each { |symbol, match|
+      matches.each do |symbol, match|
         token = Token.new(symbol, match) if TOKENS[symbol].is_a?(String)
-      }
-      if ( token == nil )
+      end
+      if token.nil?
         token = Token.new(matches.keys[0], matches[matches.keys[0]])
       end
     end
@@ -87,7 +87,7 @@ class Lexer
   end
 
 
-  def self.match_regex (regex, str)
+  def self.match_regex(regex, str)
     if regex.is_a?(String) && regex == str[0..regex.length-1]
       return regex
     elsif regex.is_a?(Regexp) && /^#{regex}/.match?(str)
