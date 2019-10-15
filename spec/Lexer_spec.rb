@@ -1,5 +1,5 @@
 require 'rspec'
-require './bin/Lexer'
+require './bin/lexer'
 
 describe "Lexer" do
   it "should tokenize multiple literal assignments" do
