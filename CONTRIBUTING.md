@@ -1,12 +1,12 @@
 # Contributing to BOWL
 
-Thankyou for taking the time to contribute to this community project.
+Thank you for taking the time to contribute to this community project.
 
-By it's nature, BOWL will requre the inovation and knowlage developed by the community.
+By its nature, BOWL will require the innovation and knowledge developed by the community.
 
 ## How does BOWL work?
 
-There are two major halfs to any compiler:
+There are two major halves to any compiler:
 - The front end, handles converting human readable code into a intermediate code for the back end
 - The back end, takes the intermediate code and produces the compiled files
 
