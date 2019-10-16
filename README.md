@@ -1,21 +1,21 @@
 # Block Oriented Wicked Language
 
-An object-oriented programing language for creating Minecraft function files. 
-Writen in Ruby.
+An object-oriented programming language for creating Minecraft function files. 
+Written in Ruby.
 
 ## About BOWL
 
-BOWL is a compiled language with strong and strict typeing.
+BOWL is a compiled language with strong and strict typing.
 
-The syntax resembels Java, C and other languages with a simular hiritage,
-and uses simular formating to minecraft commands for implementing thier uniqe functionality.
+The syntax resembles Java, C and other languages with a similar heritage,
+and uses similar formating to Minecraft commands for implementing their unique functionality.
 (i.e. an array of all creative players can be accessed through the variable @a[mode=creative])
 
 ## Development
 
-Early development is currintly ongoing.
+Early development is currently ongoing.
 
-No functioning compiler is currenty avalible.
+No functioning compiler is currently available.
 
 ## Contributing
 
